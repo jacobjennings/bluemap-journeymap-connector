@@ -6,19 +6,19 @@
   "description": "${modDescription}",
   "authors": ["${modAuthor}"],
   "license": "${modLicense}",
-  "icon": "assets/waypointsync/icon.png",
+  "icon": "assets/bluemap-journeymap-connector/icon.jpg",
   "environment": "*",
   "entrypoints": {
     "main": [
       {
         "adapter": "kotlin",
-        "value": "com.example.waypointsync.WaypointSyncMod"
+        "value": "com.machinepeople.bluemapjourneymapconnector.BlueMapJourneyMapConnectorMod"
       }
     ],
     "client": [
       {
         "adapter": "kotlin",
-        "value": "com.example.waypointsync.client.WaypointSyncClient"
+        "value": "com.machinepeople.bluemapjourneymapconnector.client.BlueMapJourneyMapConnectorClient"
       }
     ]
   },

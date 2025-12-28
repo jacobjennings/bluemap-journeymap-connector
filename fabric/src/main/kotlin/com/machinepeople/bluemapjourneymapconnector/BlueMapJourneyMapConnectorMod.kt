@@ -1,30 +1,30 @@
-package com.example.waypointsync
+package com.machinepeople.bluemapjourneymapconnector
 
-import com.example.waypointsync.bluemap.BlueMapIntegration
-import com.example.waypointsync.network.WaypointSyncNetworking
+import com.machinepeople.bluemapjourneymapconnector.bluemap.BlueMapIntegration
+import com.machinepeople.bluemapjourneymapconnector.network.BlueMapJourneyMapConnectorNetworking
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import org.slf4j.LoggerFactory
 
 /**
- * Main server-side mod initializer for Waypoint Sync.
+ * Main server-side mod initializer for BlueMap JourneyMap Connector.
  *
  * This handles:
  * - BlueMap API integration (server-side markers)
  * - Network packet registration
  * - Server lifecycle events
  */
-object WaypointSyncMod : ModInitializer {
-    const val MOD_ID = "waypointsync"
+object BlueMapJourneyMapConnectorMod : ModInitializer {
+    const val MOD_ID = "bluemap-journeymap-connector"
     val LOGGER = LoggerFactory.getLogger(MOD_ID)
 
     private var blueMapIntegration: BlueMapIntegration? = null
 
     override fun onInitialize() {
-        LOGGER.info("Initializing Waypoint Sync mod...")
+        LOGGER.info("Initializing BlueMap JourneyMap Connector mod...")
 
         // Register network packets
-        WaypointSyncNetworking.registerServerPackets()
+        BlueMapJourneyMapConnectorNetworking.registerServerPackets()
 
         // Register server lifecycle events
         ServerLifecycleEvents.SERVER_STARTING.register { server ->
@@ -38,7 +38,7 @@ object WaypointSyncMod : ModInitializer {
             blueMapIntegration = null
         }
 
-        LOGGER.info("Waypoint Sync mod initialized!")
+        LOGGER.info("BlueMap JourneyMap Connector mod initialized!")
     }
 
     /**

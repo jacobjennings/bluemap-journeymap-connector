@@ -1,8 +1,8 @@
-package com.example.waypointsync.journeymap
+package com.machinepeople.bluemapjourneymapconnector.journeymap
 
-import com.example.waypointsync.WaypointSyncMod
-import com.example.waypointsync.data.SyncableWaypoint
-import com.example.waypointsync.data.WaypointSource
+import com.machinepeople.bluemapjourneymapconnector.BlueMapJourneyMapConnectorMod
+import com.machinepeople.bluemapjourneymapconnector.data.SyncableWaypoint
+import com.machinepeople.bluemapjourneymapconnector.data.WaypointSource
 import journeymap.api.v2.client.IClientAPI
 import journeymap.api.v2.client.IClientPlugin
 import journeymap.api.v2.client.JourneyMapPlugin
@@ -14,7 +14,7 @@ import net.minecraft.resources.ResourceKey
 import net.minecraft.world.level.Level
 
 /**
- * JourneyMap API plugin for Waypoint Sync.
+ * JourneyMap API plugin for BlueMap JourneyMap Connector.
  *
  * This class is automatically discovered and loaded by JourneyMap via the @JourneyMapPlugin annotation.
  * It provides access to JourneyMap's waypoint system.
@@ -39,26 +39,26 @@ class JourneyMapIntegration : IClientPlugin {
     private var api: IClientAPI? = null
 
     override fun initialize(jmClientApi: IClientAPI) {
-        WaypointSyncMod.LOGGER.info("JourneyMap API initialized for Waypoint Sync!")
+        BlueMapJourneyMapConnectorMod.LOGGER.info("JourneyMap API initialized for BlueMap JourneyMap Connector!")
         this.api = jmClientApi
         instance = this
     }
 
-    override fun getModId(): String = WaypointSyncMod.MOD_ID
+    override fun getModId(): String = BlueMapJourneyMapConnectorMod.MOD_ID
 
     /**
      * Get all waypoints from JourneyMap as SyncableWaypoints
      */
     fun getAllWaypoints(): List<SyncableWaypoint> {
         val jmApi = api ?: run {
-            WaypointSyncMod.LOGGER.warn("JourneyMap API not available")
+            BlueMapJourneyMapConnectorMod.LOGGER.warn("JourneyMap API not available")
             return emptyList()
         }
 
         return try {
             jmApi.allWaypoints.map { it.toSyncable() }
         } catch (e: Exception) {
-            WaypointSyncMod.LOGGER.error("Failed to get waypoints from JourneyMap", e)
+            BlueMapJourneyMapConnectorMod.LOGGER.error("Failed to get waypoints from JourneyMap", e)
             emptyList()
         }
     }
@@ -72,7 +72,7 @@ class JourneyMapIntegration : IClientPlugin {
         return try {
             jmApi.getAllWaypoints(dimension).map { it.toSyncable() }
         } catch (e: Exception) {
-            WaypointSyncMod.LOGGER.error("Failed to get waypoints for dimension $dimension", e)
+            BlueMapJourneyMapConnectorMod.LOGGER.error("Failed to get waypoints for dimension $dimension", e)
             emptyList()
         }
     }
@@ -82,13 +82,13 @@ class JourneyMapIntegration : IClientPlugin {
      */
     fun addWaypoint(syncable: SyncableWaypoint): Boolean {
         val jmApi = api ?: run {
-            WaypointSyncMod.LOGGER.warn("JourneyMap API not available")
+            BlueMapJourneyMapConnectorMod.LOGGER.warn("JourneyMap API not available")
             return false
         }
 
         return try {
             val waypoint = WaypointFactory.createClientWaypoint(
-                WaypointSyncMod.MOD_ID,
+                BlueMapJourneyMapConnectorMod.MOD_ID,
                 BlockPos(syncable.x, syncable.y, syncable.z),
                 syncable.name,
                 syncable.dimension,
@@ -103,15 +103,15 @@ class JourneyMapIntegration : IClientPlugin {
                 try {
                     waypoint.setIconResourceLoctaion(Identifier.tryParse(iconPath)!!)
                 } catch (e: Exception) {
-                    WaypointSyncMod.LOGGER.debug("Could not set icon for waypoint: $iconPath")
+                    BlueMapJourneyMapConnectorMod.LOGGER.debug("Could not set icon for waypoint: $iconPath")
                 }
             }
 
-            jmApi.addWaypoint(WaypointSyncMod.MOD_ID, waypoint)
-            WaypointSyncMod.LOGGER.info("Added waypoint '${syncable.name}' to JourneyMap")
+            jmApi.addWaypoint(BlueMapJourneyMapConnectorMod.MOD_ID, waypoint)
+            BlueMapJourneyMapConnectorMod.LOGGER.info("Added waypoint '${syncable.name}' to JourneyMap")
             true
         } catch (e: Exception) {
-            WaypointSyncMod.LOGGER.error("Failed to add waypoint to JourneyMap", e)
+            BlueMapJourneyMapConnectorMod.LOGGER.error("Failed to add waypoint to JourneyMap", e)
             false
         }
     }
@@ -123,19 +123,19 @@ class JourneyMapIntegration : IClientPlugin {
         val jmApi = api ?: return false
 
         return try {
-            val existingWaypoint = jmApi.getWaypoints(WaypointSyncMod.MOD_ID)
+            val existingWaypoint = jmApi.getWaypoints(BlueMapJourneyMapConnectorMod.MOD_ID)
                 .find { it.guid == syncable.sourceId || matchesLocation(it, syncable) }
 
             if (existingWaypoint != null) {
-                jmApi.removeWaypoint(WaypointSyncMod.MOD_ID, existingWaypoint)
-                WaypointSyncMod.LOGGER.info("Removed waypoint '${syncable.name}' from JourneyMap")
+                jmApi.removeWaypoint(BlueMapJourneyMapConnectorMod.MOD_ID, existingWaypoint)
+                BlueMapJourneyMapConnectorMod.LOGGER.info("Removed waypoint '${syncable.name}' from JourneyMap")
                 true
             } else {
-                WaypointSyncMod.LOGGER.warn("Waypoint '${syncable.name}' not found in JourneyMap")
+                BlueMapJourneyMapConnectorMod.LOGGER.warn("Waypoint '${syncable.name}' not found in JourneyMap")
                 false
             }
         } catch (e: Exception) {
-            WaypointSyncMod.LOGGER.error("Failed to remove waypoint from JourneyMap", e)
+            BlueMapJourneyMapConnectorMod.LOGGER.error("Failed to remove waypoint from JourneyMap", e)
             false
         }
     }

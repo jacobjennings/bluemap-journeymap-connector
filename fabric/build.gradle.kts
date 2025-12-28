@@ -35,7 +35,7 @@ dependencies {
 }
 
 loom {
-    accessWidenerPath.set(file("src/main/resources/waypointsync.accesswidener"))
+    accessWidenerPath.set(file("src/main/resources/bluemap-journeymap-connector.accesswidener"))
 }
 
 tasks.processResources {

@@ -1,9 +1,9 @@
-package com.example.waypointsync.network
+package com.machinepeople.bluemapjourneymapconnector.network
 
-import com.example.waypointsync.data.SyncableWaypoint
-import com.example.waypointsync.data.WaypointDiff
-import com.example.waypointsync.journeymap.JourneyMapIntegration
-import com.example.waypointsync.sync.DiffCalculator
+import com.machinepeople.bluemapjourneymapconnector.data.SyncableWaypoint
+import com.machinepeople.bluemapjourneymapconnector.data.WaypointDiff
+import com.machinepeople.bluemapjourneymapconnector.journeymap.JourneyMapIntegration
+import com.machinepeople.bluemapjourneymapconnector.sync.DiffCalculator
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 

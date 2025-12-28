@@ -1,8 +1,8 @@
-package com.example.waypointsync.bluemap
+package com.machinepeople.bluemapjourneymapconnector.bluemap
 
-import com.example.waypointsync.WaypointSyncMod
-import com.example.waypointsync.data.SyncableWaypoint
-import com.example.waypointsync.data.WaypointSource
+import com.machinepeople.bluemapjourneymapconnector.BlueMapJourneyMapConnectorMod
+import com.machinepeople.bluemapjourneymapconnector.data.SyncableWaypoint
+import com.machinepeople.bluemapjourneymapconnector.data.WaypointSource
 import com.flowpowered.math.vector.Vector3d
 import de.bluecolored.bluemap.api.BlueMapAPI
 import de.bluecolored.bluemap.api.BlueMapMap
@@ -12,7 +12,7 @@ import java.awt.Color
 import java.util.function.Consumer
 
 /**
- * BlueMap API integration for Waypoint Sync.
+ * BlueMap API integration for BlueMap JourneyMap Connector.
  *
  * This class handles server-side marker management in BlueMap.
  * BlueMap API uses a consumer-based initialization pattern.
@@ -20,7 +20,7 @@ import java.util.function.Consumer
 class BlueMapIntegration {
 
     companion object {
-        const val MARKER_SET_ID = "waypointsync"
+        const val MARKER_SET_ID = "bluemap-journeymap-connector"
         const val MARKER_SET_LABEL = "Synced Waypoints"
 
         // Default POI icon (can be customized)
@@ -33,13 +33,13 @@ class BlueMapIntegration {
 
     init {
         onEnableConsumer = Consumer { blueMapApi ->
-            WaypointSyncMod.LOGGER.info("BlueMap API enabled, connecting...")
+            BlueMapJourneyMapConnectorMod.LOGGER.info("BlueMap API enabled, connecting...")
             api = blueMapApi
             ensureMarkerSets()
         }
 
         onDisableConsumer = Consumer { _ ->
-            WaypointSyncMod.LOGGER.info("BlueMap API disabled")
+            BlueMapJourneyMapConnectorMod.LOGGER.info("BlueMap API disabled")
             api = null
         }
 
@@ -88,7 +88,7 @@ class BlueMapIntegration {
             .build()
 
         map.markerSets[MARKER_SET_ID] = newSet
-        WaypointSyncMod.LOGGER.info("Created marker set '$MARKER_SET_ID' on map '${map.id}'")
+        BlueMapJourneyMapConnectorMod.LOGGER.info("Created marker set '$MARKER_SET_ID' on map '${map.id}'")
         return newSet
     }
 
@@ -97,7 +97,7 @@ class BlueMapIntegration {
      */
     fun getAllWaypoints(): List<SyncableWaypoint> {
         val blueMapApi = api ?: run {
-            WaypointSyncMod.LOGGER.warn("BlueMap API not available")
+            BlueMapJourneyMapConnectorMod.LOGGER.warn("BlueMap API not available")
             return emptyList()
         }
 
@@ -131,7 +131,7 @@ class BlueMapIntegration {
      */
     fun addWaypoint(syncable: SyncableWaypoint): Boolean {
         val blueMapApi = api ?: run {
-            WaypointSyncMod.LOGGER.warn("BlueMap API not available")
+            BlueMapJourneyMapConnectorMod.LOGGER.warn("BlueMap API not available")
             return false
         }
 
@@ -139,7 +139,7 @@ class BlueMapIntegration {
             // Find the map for this dimension
             val map = findMapForDimension(blueMapApi, syncable.dimension)
             if (map == null) {
-                WaypointSyncMod.LOGGER.warn("No BlueMap map found for dimension '${syncable.dimension}'")
+                BlueMapJourneyMapConnectorMod.LOGGER.warn("No BlueMap map found for dimension '${syncable.dimension}'")
                 return false
             }
 
@@ -153,10 +153,10 @@ class BlueMapIntegration {
                 .build()
 
             markerSet.markers[markerId] = marker
-            WaypointSyncMod.LOGGER.info("Added marker '${syncable.name}' to BlueMap")
+            BlueMapJourneyMapConnectorMod.LOGGER.info("Added marker '${syncable.name}' to BlueMap")
             true
         } catch (e: Exception) {
-            WaypointSyncMod.LOGGER.error("Failed to add marker to BlueMap", e)
+            BlueMapJourneyMapConnectorMod.LOGGER.error("Failed to add marker to BlueMap", e)
             false
         }
     }
@@ -174,14 +174,14 @@ class BlueMapIntegration {
 
             val removed = markerSet.markers.remove(markerId)
             if (removed != null) {
-                WaypointSyncMod.LOGGER.info("Removed marker '${syncable.name}' from BlueMap")
+                BlueMapJourneyMapConnectorMod.LOGGER.info("Removed marker '${syncable.name}' from BlueMap")
                 true
             } else {
-                WaypointSyncMod.LOGGER.warn("Marker '${syncable.name}' not found in BlueMap")
+                BlueMapJourneyMapConnectorMod.LOGGER.warn("Marker '${syncable.name}' not found in BlueMap")
                 false
             }
         } catch (e: Exception) {
-            WaypointSyncMod.LOGGER.error("Failed to remove marker from BlueMap", e)
+            BlueMapJourneyMapConnectorMod.LOGGER.error("Failed to remove marker from BlueMap", e)
             false
         }
     }

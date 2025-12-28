@@ -5,7 +5,7 @@ plugins {
 }
 
 allprojects {
-    group = "com.example.waypointsync"
+    group = "com.machinepeople.bluemapjourneymapconnector"
     version = property("modVersion") as String
 
     repositories {

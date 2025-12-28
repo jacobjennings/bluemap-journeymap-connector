@@ -1,6 +1,6 @@
-package com.example.waypointsync.sync
+package com.machinepeople.bluemapjourneymapconnector.sync
 
-import com.example.waypointsync.data.*
+import com.machinepeople.bluemapjourneymapconnector.data.*
 
 /**
  * Calculates the difference between JourneyMap and BlueMap waypoints

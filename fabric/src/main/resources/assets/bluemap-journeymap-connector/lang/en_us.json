@@ -1,0 +1,23 @@
+{
+  "gui.bluemap-journeymap-connector.title": "BlueMap JourneyMap Connector",
+  "gui.bluemap-journeymap-connector.journeymap": "JourneyMap (Local)",
+  "gui.bluemap-journeymap-connector.bluemap": "BlueMap (Server)",
+  "gui.bluemap-journeymap-connector.sync_all_to_bluemap": "Sync All →",
+  "gui.bluemap-journeymap-connector.sync_all_to_journeymap": "← Sync All",
+  "gui.bluemap-journeymap-connector.refresh": "Refresh",
+  "gui.bluemap-journeymap-connector.close": "Close",
+  "gui.bluemap-journeymap-connector.loading": "Loading waypoints...",
+  "gui.bluemap-journeymap-connector.jm_only": "JM Only: %d",
+  "gui.bluemap-journeymap-connector.bm_only": "BM Only: %d",
+  "gui.bluemap-journeymap-connector.synced": "Synced: %d",
+  "gui.bluemap-journeymap-connector.conflicts": "Conflicts: %d",
+  
+  "key.bluemap-journeymap-connector.open_gui": "Open BlueMap JourneyMap Connector",
+  "category.bluemap-journeymap-connector": "BlueMap JourneyMap Connector",
+  
+  "message.bluemap-journeymap-connector.sync_success": "Successfully synced waypoint '%s'",
+  "message.bluemap-journeymap-connector.sync_failed": "Failed to sync waypoint '%s'",
+  "message.bluemap-journeymap-connector.bluemap_unavailable": "BlueMap is not available",
+  "message.bluemap-journeymap-connector.journeymap_unavailable": "JourneyMap is not available"
+}
+

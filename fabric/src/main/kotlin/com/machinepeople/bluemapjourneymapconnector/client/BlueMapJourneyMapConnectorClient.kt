@@ -1,8 +1,8 @@
-package com.example.waypointsync.client
+package com.machinepeople.bluemapjourneymapconnector.client
 
-import com.example.waypointsync.WaypointSyncMod
-import com.example.waypointsync.client.gui.WaypointDiffScreen
-import com.example.waypointsync.network.WaypointSyncNetworking
+import com.machinepeople.bluemapjourneymapconnector.BlueMapJourneyMapConnectorMod
+import com.machinepeople.bluemapjourneymapconnector.client.gui.WaypointDiffScreen
+import com.machinepeople.bluemapjourneymapconnector.network.BlueMapJourneyMapConnectorNetworking
 import com.mojang.blaze3d.platform.InputConstants
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.api.EnvType
@@ -16,7 +16,7 @@ import org.lwjgl.glfw.GLFW
 import net.minecraft.resources.Identifier
 
 /**
- * Client-side mod initializer for Waypoint Sync.
+ * Client-side mod initializer for BlueMap JourneyMap Connector.
  *
  * This handles:
  * - JourneyMap API integration (client-side waypoints)
@@ -24,56 +24,45 @@ import net.minecraft.resources.Identifier
  * - Client-side network packet handling
  */
 @Environment(EnvType.CLIENT)
-object WaypointSyncClient : ClientModInitializer {
+object BlueMapJourneyMapConnectorClient : ClientModInitializer {
 
     private val OPEN_SYNC_GUI_KEY: KeyMapping = KeyMapping(
-        "key.waypointsync.open_gui",
+        "key.bluemap-journeymap-connector.open_gui",
+        InputConstants.Type.KEYSYM,
         GLFW.GLFW_KEY_J,
-        KeyMapping.Category(Identifier.tryParse("category.waypointsync")!!)
+        KeyMapping.Category(Identifier.tryParse("category.bluemap-journeymap-connector")!!)
     )
 
     override fun onInitializeClient() {
-        WaypointSyncMod.LOGGER.info("Initializing Waypoint Sync client...")
+        BlueMapJourneyMapConnectorMod.LOGGER.info("Initializing BlueMap JourneyMap Connector client...")
 
         // Register keybindings
         KeyBindingHelper.registerKeyBinding(OPEN_SYNC_GUI_KEY)
 
         // Register client network packets
-        WaypointSyncNetworking.registerClientPackets()
+        BlueMapJourneyMapConnectorNetworking.registerClientPackets()
 
-        // Handle keybinding press (requires Shift to be held)
+        // Handle keybinding press
         ClientTickEvents.END_CLIENT_TICK.register { client ->
             while (OPEN_SYNC_GUI_KEY.consumeClick()) {
-                // Only open if Shift is held
-                if (hasShiftDown()) {
-                    openSyncGui(client)
-                }
+                openSyncGui(client)
             }
         }
 
-        WaypointSyncMod.LOGGER.info("Waypoint Sync client initialized!")
+        BlueMapJourneyMapConnectorMod.LOGGER.info("BlueMap JourneyMap Connector client initialized!")
     }
 
     private fun openSyncGui(client: Minecraft) {
         // Only open if in game
         if (client.level == null) return
 
-        WaypointSyncMod.LOGGER.info("Opening Waypoint Sync GUI...")
+        BlueMapJourneyMapConnectorMod.LOGGER.info("Opening BlueMap JourneyMap Connector GUI...")
 
         // Request waypoint data from server (BlueMap markers)
-        WaypointSyncNetworking.requestBlueMapWaypoints()
+        BlueMapJourneyMapConnectorNetworking.requestBlueMapWaypoints()
 
         // Open the diff screen
         client.setScreen(WaypointDiffScreen())
-    }
-
-    /**
-     * Check if Shift key is currently held down
-     */
-    private fun hasShiftDown(): Boolean {
-        val window = Minecraft.getInstance().window
-        return InputConstants.isKeyDown(window, GLFW.GLFW_KEY_LEFT_SHIFT) ||
-                InputConstants.isKeyDown(window, GLFW.GLFW_KEY_RIGHT_SHIFT)
     }
 }
 

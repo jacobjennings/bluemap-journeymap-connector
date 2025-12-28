@@ -1,9 +1,9 @@
-package com.example.waypointsync.client.gui
+package com.machinepeople.bluemapjourneymapconnector.client.gui
 
-import com.example.waypointsync.WaypointSyncMod
-import com.example.waypointsync.data.*
-import com.example.waypointsync.network.WaypointDataCache
-import com.example.waypointsync.network.WaypointSyncNetworking
+import com.machinepeople.bluemapjourneymapconnector.BlueMapJourneyMapConnectorMod
+import com.machinepeople.bluemapjourneymapconnector.data.*
+import com.machinepeople.bluemapjourneymapconnector.network.WaypointDataCache
+import com.machinepeople.bluemapjourneymapconnector.network.BlueMapJourneyMapConnectorNetworking
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.minecraft.client.gui.GuiGraphics
@@ -19,7 +19,7 @@ import net.minecraft.client.input.MouseButtonEvent
  *
  * Layout:
  * ┌────────────────────────────────────────────────────────────┐
- * │                    Waypoint Sync                           │
+ * │                    BlueMap JourneyMap Connector                           │
  * ├─────────────────────┬──────┬───────────────────────────────┤
  * │  JourneyMap (Local) │      │    BlueMap (Server)           │
  * ├─────────────────────┤      ├───────────────────────────────┤
@@ -31,7 +31,7 @@ import net.minecraft.client.input.MouseButtonEvent
  * └────────────────────────────────────────────────────────────┘
  */
 @Environment(EnvType.CLIENT)
-class WaypointDiffScreen : Screen(Component.translatable("gui.waypointsync.title")) {
+class WaypointDiffScreen : Screen(Component.translatable("gui.bluemap-journeymap-connector.title")) {
 
     companion object {
         // Layout constants
@@ -106,8 +106,8 @@ class WaypointDiffScreen : Screen(Component.translatable("gui.waypointsync.title
     }
 
     override fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, partialTick: Float) {
-        // Render dark background
-        renderBackground(guiGraphics, mouseX, mouseY, partialTick)
+        // Render background and widgets (buttons)
+        super.render(guiGraphics, mouseX, mouseY, partialTick)
 
         // Render title
         guiGraphics.drawCenteredString(
@@ -163,9 +163,6 @@ class WaypointDiffScreen : Screen(Component.translatable("gui.waypointsync.title
             }
             guiGraphics.drawCenteredString(font, stats, width / 2, statsY, TEXT_COLOR)
         }
-
-        // Render widgets (buttons)
-        super.render(guiGraphics, mouseX, mouseY, partialTick)
     }
 
     private fun renderPanel(
@@ -235,7 +232,7 @@ class WaypointDiffScreen : Screen(Component.translatable("gui.waypointsync.title
 
     override fun mouseClicked(event: net.minecraft.client.input.MouseButtonEvent, handled: Boolean): Boolean {
         if (event.button() == 0 && !isLoading) {
-            // Check for clicks on waypoint sync buttons
+            // Check for clicks on connector sync buttons
             handleWaypointClick(event.x().toInt(), event.y().toInt())
         }
         return super.mouseClicked(event, handled)
@@ -298,24 +295,24 @@ class WaypointDiffScreen : Screen(Component.translatable("gui.waypointsync.title
     }
 
     private fun syncWaypointToBlueMap(waypoint: SyncableWaypoint) {
-        WaypointSyncMod.LOGGER.info("Syncing '${waypoint.name}' to BlueMap")
+        BlueMapJourneyMapConnectorMod.LOGGER.info("Syncing '${waypoint.name}' to BlueMap")
         val operation = SyncOperation(
             action = SyncAction.CREATE,
             waypoint = waypoint.copy(source = WaypointSource.SYNCED),
             targetSource = WaypointSource.BLUEMAP
         )
-        WaypointSyncNetworking.syncToBlueMap(listOf(operation))
+        BlueMapJourneyMapConnectorNetworking.syncToBlueMap(listOf(operation))
         refreshData()
     }
 
     private fun syncWaypointToJourneyMap(waypoint: SyncableWaypoint) {
-        WaypointSyncMod.LOGGER.info("Syncing '${waypoint.name}' to JourneyMap")
-        com.example.waypointsync.journeymap.JourneyMapIntegration.getInstance()?.addWaypoint(waypoint)
+        BlueMapJourneyMapConnectorMod.LOGGER.info("Syncing '${waypoint.name}' to JourneyMap")
+        com.machinepeople.bluemapjourneymapconnector.journeymap.JourneyMapIntegration.getInstance()?.addWaypoint(waypoint)
         refreshData()
     }
 
     private fun syncAllToBlueMap() {
-        WaypointSyncMod.LOGGER.info("Syncing all JourneyMap waypoints to BlueMap")
+        BlueMapJourneyMapConnectorMod.LOGGER.info("Syncing all JourneyMap waypoints to BlueMap")
         val operations = diff.journeyMapOnly.map { waypoint ->
             SyncOperation(
                 action = SyncAction.CREATE,
@@ -324,14 +321,14 @@ class WaypointDiffScreen : Screen(Component.translatable("gui.waypointsync.title
             )
         }
         if (operations.isNotEmpty()) {
-            WaypointSyncNetworking.syncToBlueMap(operations)
+            BlueMapJourneyMapConnectorNetworking.syncToBlueMap(operations)
             refreshData()
         }
     }
 
     private fun syncAllToJourneyMap() {
-        WaypointSyncMod.LOGGER.info("Syncing all BlueMap waypoints to JourneyMap")
-        val jmIntegration = com.example.waypointsync.journeymap.JourneyMapIntegration.getInstance()
+        BlueMapJourneyMapConnectorMod.LOGGER.info("Syncing all BlueMap waypoints to JourneyMap")
+        val jmIntegration = com.machinepeople.bluemapjourneymapconnector.journeymap.JourneyMapIntegration.getInstance()
         if (jmIntegration != null) {
             diff.blueMapOnly.forEach { waypoint ->
                 jmIntegration.addWaypoint(waypoint)
@@ -346,7 +343,7 @@ class WaypointDiffScreen : Screen(Component.translatable("gui.waypointsync.title
         scrollOffsetBM = 0
 
         // Request fresh BlueMap data from server
-        WaypointSyncNetworking.requestBlueMapWaypoints()
+        BlueMapJourneyMapConnectorNetworking.requestBlueMapWaypoints()
 
         // Update diff after a short delay (for network response)
         // In a real implementation, this would be callback-based

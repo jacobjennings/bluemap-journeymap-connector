@@ -1,10 +1,10 @@
-package com.example.waypointsync.network
+package com.machinepeople.bluemapjourneymapconnector.network
 
-import com.example.waypointsync.WaypointSyncMod
-import com.example.waypointsync.data.SyncAction
-import com.example.waypointsync.data.SyncOperation
-import com.example.waypointsync.data.SyncableWaypoint
-import com.example.waypointsync.data.WaypointSource
+import com.machinepeople.bluemapjourneymapconnector.BlueMapJourneyMapConnectorMod
+import com.machinepeople.bluemapjourneymapconnector.data.SyncAction
+import com.machinepeople.bluemapjourneymapconnector.data.SyncOperation
+import com.machinepeople.bluemapjourneymapconnector.data.SyncableWaypoint
+import com.machinepeople.bluemapjourneymapconnector.data.WaypointSource
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import net.fabricmc.api.EnvType
@@ -19,14 +19,14 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload
 import net.minecraft.resources.Identifier
 
 /**
- * Network packet handling for Waypoint Sync.
+ * Network packet handling for BlueMap JourneyMap Connector.
  *
  * Handles client <-> server communication for:
  * - Requesting BlueMap waypoints (client -> server)
  * - Sending BlueMap waypoints to client (server -> client)
  * - Sync operations (client -> server for BlueMap, server -> client for JourneyMap)
  */
-object WaypointSyncNetworking {
+object BlueMapJourneyMapConnectorNetworking {
 
     private val json = Json {
         ignoreUnknownKeys = true
@@ -34,10 +34,10 @@ object WaypointSyncNetworking {
     }
 
     // Packet IDs
-    val REQUEST_BLUEMAP_WAYPOINTS_ID = Identifier.tryParse("${WaypointSyncMod.MOD_ID}:request_bm_waypoints")!!
-    val BLUEMAP_WAYPOINTS_RESPONSE_ID = Identifier.tryParse("${WaypointSyncMod.MOD_ID}:bm_waypoints_response")!!
-    val SYNC_TO_BLUEMAP_ID = Identifier.tryParse("${WaypointSyncMod.MOD_ID}:sync_to_bluemap")!!
-    val SYNC_TO_JOURNEYMAP_ID = Identifier.tryParse("${WaypointSyncMod.MOD_ID}:sync_to_journeymap")!!
+    val REQUEST_BLUEMAP_WAYPOINTS_ID = Identifier.tryParse("${BlueMapJourneyMapConnectorMod.MOD_ID}:request_bm_waypoints")!!
+    val BLUEMAP_WAYPOINTS_RESPONSE_ID = Identifier.tryParse("${BlueMapJourneyMapConnectorMod.MOD_ID}:bm_waypoints_response")!!
+    val SYNC_TO_BLUEMAP_ID = Identifier.tryParse("${BlueMapJourneyMapConnectorMod.MOD_ID}:sync_to_bluemap")!!
+    val SYNC_TO_JOURNEYMAP_ID = Identifier.tryParse("${BlueMapJourneyMapConnectorMod.MOD_ID}:sync_to_journeymap")!!
 
     // Packet payloads
     data class RequestBlueMapWaypointsPayload(val dimension: String?) : CustomPacketPayload {
@@ -134,11 +134,11 @@ object WaypointSyncNetworking {
         // Handle request for BlueMap waypoints
         ServerPlayNetworking.registerGlobalReceiver(RequestBlueMapWaypointsPayload.TYPE) { payload, context ->
             val player = context.player()
-            WaypointSyncMod.LOGGER.info("Received BlueMap waypoints request from ${player.name.string}")
+            BlueMapJourneyMapConnectorMod.LOGGER.info("Received BlueMap waypoints request from ${player.name.string}")
 
-            val blueMapIntegration = WaypointSyncMod.getBlueMapIntegration()
+            val blueMapIntegration = BlueMapJourneyMapConnectorMod.getBlueMapIntegration()
             if (blueMapIntegration == null || !blueMapIntegration.isAvailable()) {
-                WaypointSyncMod.LOGGER.warn("BlueMap integration not available")
+                BlueMapJourneyMapConnectorMod.LOGGER.warn("BlueMap integration not available")
                 context.responseSender().sendPacket(BlueMapWaypointsResponsePayload(emptyList()))
                 return@registerGlobalReceiver
             }
@@ -155,11 +155,11 @@ object WaypointSyncNetworking {
         // Handle sync operations to BlueMap
         ServerPlayNetworking.registerGlobalReceiver(SyncToBlueMapPayload.TYPE) { payload, context ->
             val player = context.player()
-            WaypointSyncMod.LOGGER.info("Received sync to BlueMap request from ${player.name.string}")
+            BlueMapJourneyMapConnectorMod.LOGGER.info("Received sync to BlueMap request from ${player.name.string}")
 
-            val blueMapIntegration = WaypointSyncMod.getBlueMapIntegration()
+            val blueMapIntegration = BlueMapJourneyMapConnectorMod.getBlueMapIntegration()
             if (blueMapIntegration == null || !blueMapIntegration.isAvailable()) {
-                WaypointSyncMod.LOGGER.warn("BlueMap integration not available")
+                BlueMapJourneyMapConnectorMod.LOGGER.warn("BlueMap integration not available")
                 return@registerGlobalReceiver
             }
 
@@ -183,17 +183,17 @@ object WaypointSyncNetworking {
     fun registerClientPackets() {
         // Handle BlueMap waypoints response
         ClientPlayNetworking.registerGlobalReceiver(BlueMapWaypointsResponsePayload.TYPE) { payload, context ->
-            WaypointSyncMod.LOGGER.info("Received ${payload.waypoints.size} BlueMap waypoints from server")
+            BlueMapJourneyMapConnectorMod.LOGGER.info("Received ${payload.waypoints.size} BlueMap waypoints from server")
             WaypointDataCache.updateBlueMapWaypoints(payload.waypoints)
         }
 
         // Handle sync operations to JourneyMap
         ClientPlayNetworking.registerGlobalReceiver(SyncToJourneyMapPayload.TYPE) { payload, context ->
-            WaypointSyncMod.LOGGER.info("Received sync to JourneyMap request from server")
+            BlueMapJourneyMapConnectorMod.LOGGER.info("Received sync to JourneyMap request from server")
 
-            val jmIntegration = com.example.waypointsync.journeymap.JourneyMapIntegration.getInstance()
+            val jmIntegration = com.machinepeople.bluemapjourneymapconnector.journeymap.JourneyMapIntegration.getInstance()
             if (jmIntegration == null) {
-                WaypointSyncMod.LOGGER.warn("JourneyMap integration not available")
+                BlueMapJourneyMapConnectorMod.LOGGER.warn("JourneyMap integration not available")
                 return@registerGlobalReceiver
             }
 

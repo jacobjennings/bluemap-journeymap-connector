@@ -1,4 +1,4 @@
-package com.example.waypointsync.data
+package com.machinepeople.bluemapjourneymapconnector.data
 
 import kotlinx.serialization.Serializable
 

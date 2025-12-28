@@ -1,4 +1,4 @@
-# Waypoint Sync
+# BlueMap JourneyMap Connector
 
 A Fabric mod that synchronizes waypoints between [JourneyMap](https://www.curseforge.com/minecraft/mc-mods/journeymap) and [BlueMap](https://bluemap.bluecolored.de/).
 
@@ -15,19 +15,19 @@ A Fabric mod that synchronizes waypoints between [JourneyMap](https://www.cursef
 ┌─────────────────────────────────────────────────────────────┐
 │                        CLIENT                                │
 │  ┌─────────────────┐    ┌─────────────────────────────────┐ │
-│  │ JourneyMap      │←──→│ Waypoint Sync Mod               │ │
+│  │ JourneyMap      │←──→│ BlueMap JourneyMap Connector    │ │
 │  │ Waypoints       │    │ - Diff GUI                      │ │
 │  │ (Local)         │    │ - Network Communication         │ │
-│  └─────────────────┘    └───────────────┬─────────────────┘ │
+│  │ └─────────────────┘    └───────────────┬─────────────────┘ │
 └─────────────────────────────────────────┼───────────────────┘
-                                          │
+                                         │
 ┌─────────────────────────────────────────┼───────────────────┐
 │                        SERVER           │                    │
 │  ┌─────────────────┐    ┌───────────────▼─────────────────┐ │
-│  │ BlueMap         │←──→│ Waypoint Sync Mod               │ │
+│  │ BlueMap         │←──→│ BlueMap JourneyMap Connector    │ │
 │  │ Markers         │    │ - Marker Management             │ │
 │  │ (Server)        │    └─────────────────────────────────┘ │
-│  └─────────────────┘                                        │
+│  │ └─────────────────┘                                        │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -50,7 +50,7 @@ A Fabric mod that synchronizes waypoints between [JourneyMap](https://www.cursef
 
 ## Usage
 
-1. Press `Shift+J` (default keybind) to open the Waypoint Sync GUI
+1. Press `Shift+J` (default keybind) to open the BlueMap JourneyMap Connector GUI
 2. The left panel shows JourneyMap waypoints
 3. The right panel shows BlueMap POI markers
 4. Click the `→` button next to a JourneyMap waypoint to copy it to BlueMap
@@ -59,7 +59,7 @@ A Fabric mod that synchronizes waypoints between [JourneyMap](https://www.cursef
 
 ## Configuration
 
-The keybind can be changed in Minecraft's Controls menu under the "Waypoint Sync" category.
+The keybind can be changed in Minecraft's Controls menu under the "BlueMap JourneyMap Connector" category.
 
 ## Building
 
@@ -80,15 +80,15 @@ This mod is built with:
 ### Project Structure
 
 ```
-waypoint-sync/
+bluemap-journeymap-connector/
 ├── core/                    # Shared data models and sync logic
 │   └── src/main/kotlin/
-│       └── com/example/waypointsync/
+│       └── com/machinepeople/bluemapjourneymapconnector/
 │           ├── data/        # SyncableWaypoint, WaypointDiff, etc.
 │           └── sync/        # DiffCalculator
 ├── fabric/                  # Fabric mod implementation
 │   └── src/main/kotlin/
-│       └── com/example/waypointsync/
+│       └── com/machinepeople/bluemapjourneymapconnector/
 │           ├── bluemap/     # BlueMap API integration
 │           ├── journeymap/  # JourneyMap API integration
 │           ├── client/      # Client-side code (GUI, keybinds)
@@ -105,4 +105,3 @@ MIT License
 - [BlueMap](https://bluemap.bluecolored.de/) by Blue (Lukas Rieger)
 - [JourneyMap](https://journeymap.info/) by Techbrew
 - [Fabric](https://fabricmc.net/) modding toolchain
-
