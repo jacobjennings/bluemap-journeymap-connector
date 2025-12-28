@@ -1,0 +1,23 @@
+{
+  "gui.waypointsync.title": "Waypoint Sync",
+  "gui.waypointsync.journeymap": "JourneyMap (Local)",
+  "gui.waypointsync.bluemap": "BlueMap (Server)",
+  "gui.waypointsync.sync_all_to_bluemap": "Sync All →",
+  "gui.waypointsync.sync_all_to_journeymap": "← Sync All",
+  "gui.waypointsync.refresh": "Refresh",
+  "gui.waypointsync.close": "Close",
+  "gui.waypointsync.loading": "Loading waypoints...",
+  "gui.waypointsync.jm_only": "JM Only: %d",
+  "gui.waypointsync.bm_only": "BM Only: %d",
+  "gui.waypointsync.synced": "Synced: %d",
+  "gui.waypointsync.conflicts": "Conflicts: %d",
+  
+  "key.waypointsync.open_gui": "Open Waypoint Sync (Shift+J)",
+  "category.waypointsync": "Waypoint Sync",
+  
+  "message.waypointsync.sync_success": "Successfully synced waypoint '%s'",
+  "message.waypointsync.sync_failed": "Failed to sync waypoint '%s'",
+  "message.waypointsync.bluemap_unavailable": "BlueMap is not available",
+  "message.waypointsync.journeymap_unavailable": "JourneyMap is not available"
+}
+

@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "id": "${modId}",
+  "version": "${modVersion}",
+  "name": "${modName}",
+  "description": "${modDescription}",
+  "authors": ["${modAuthor}"],
+  "license": "${modLicense}",
+  "icon": "assets/waypointsync/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      {
+        "adapter": "kotlin",
+        "value": "com.example.waypointsync.WaypointSyncMod"
+      }
+    ],
+    "client": [
+      {
+        "adapter": "kotlin",
+        "value": "com.example.waypointsync.client.WaypointSyncClient"
+      }
+    ]
+  },
+  "mixins": [],
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "fabric-api": "*",
+    "fabric-language-kotlin": ">=${fabricKotlinVersion}",
+    "minecraft": ">=${minecraftVersion}"
+  },
+  "suggests": {
+    "journeymap": "*",
+    "bluemap": "*"
+  },
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "https://discord.gg/your-discord"
+      }
+    }
+  }
+}
+
