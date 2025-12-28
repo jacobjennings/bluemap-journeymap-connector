@@ -39,7 +39,7 @@ object BlueMapJourneyMapConnectorClient : ClientModInitializer {
         // Register keybindings
         KeyBindingHelper.registerKeyBinding(OPEN_SYNC_GUI_KEY)
 
-        // Register client network packets
+        // Register client network packet handlers
         BlueMapJourneyMapConnectorNetworking.registerClientPackets()
 
         // Handle keybinding press

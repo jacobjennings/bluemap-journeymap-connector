@@ -102,12 +102,15 @@ class BlueMapIntegration {
         }
 
         val waypoints = mutableListOf<SyncableWaypoint>()
+        BlueMapJourneyMapConnectorMod.LOGGER.info("Scanning ${blueMapApi.maps.size} maps for markers")
 
         for (map in blueMapApi.maps) {
             val dimension = extractDimension(map)
+            BlueMapJourneyMapConnectorMod.LOGGER.info("Scanning map '${map.id}' (dim: $dimension) with ${map.markerSets.size} marker sets")
             
             // Get markers from all marker sets (not just ours)
             for ((setId, markerSet) in map.markerSets) {
+                BlueMapJourneyMapConnectorMod.LOGGER.info("Scanning marker set '$setId' with ${markerSet.markers.size} markers")
                 for ((markerId, marker) in markerSet.markers) {
                     if (marker is POIMarker) {
                         waypoints.add(marker.toSyncable(markerId, dimension, setId))
@@ -116,6 +119,7 @@ class BlueMapIntegration {
             }
         }
 
+        BlueMapJourneyMapConnectorMod.LOGGER.info("Found ${waypoints.size} POI markers in total")
         return waypoints
     }
 
@@ -136,10 +140,12 @@ class BlueMapIntegration {
         }
 
         return try {
+            BlueMapJourneyMapConnectorMod.LOGGER.info("Attempting to add waypoint '${syncable.name}' to dimension '${syncable.dimension}'")
             // Find the map for this dimension
             val map = findMapForDimension(blueMapApi, syncable.dimension)
             if (map == null) {
-                BlueMapJourneyMapConnectorMod.LOGGER.warn("No BlueMap map found for dimension '${syncable.dimension}'")
+                val availableMaps = blueMapApi.maps.joinToString { "${it.id} (dim: ${extractDimension(it)})" }
+                BlueMapJourneyMapConnectorMod.LOGGER.warn("No BlueMap map found for dimension '${syncable.dimension}'. Available: $availableMaps")
                 return false
             }
 
@@ -153,7 +159,7 @@ class BlueMapIntegration {
                 .build()
 
             markerSet.markers[markerId] = marker
-            BlueMapJourneyMapConnectorMod.LOGGER.info("Added marker '${syncable.name}' to BlueMap")
+            BlueMapJourneyMapConnectorMod.LOGGER.info("Successfully added marker '$markerId' ('${syncable.name}') to marker set '$MARKER_SET_ID' on map '${map.id}'")
             true
         } catch (e: Exception) {
             BlueMapJourneyMapConnectorMod.LOGGER.error("Failed to add marker to BlueMap", e)

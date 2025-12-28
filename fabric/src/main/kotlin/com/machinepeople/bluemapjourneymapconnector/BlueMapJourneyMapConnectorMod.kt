@@ -23,7 +23,10 @@ object BlueMapJourneyMapConnectorMod : ModInitializer {
     override fun onInitialize() {
         LOGGER.info("Initializing BlueMap JourneyMap Connector mod...")
 
-        // Register network packets
+        // Register network payloads
+        BlueMapJourneyMapConnectorNetworking.registerPayloadTypes()
+
+        // Register network packet handlers
         BlueMapJourneyMapConnectorNetworking.registerServerPackets()
 
         // Register server lifecycle events

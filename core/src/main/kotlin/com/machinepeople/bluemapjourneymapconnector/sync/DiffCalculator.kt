@@ -60,11 +60,11 @@ object DiffCalculator {
     }
 
     /**
-     * Check if two waypoints are identical (same name and color)
+     * Check if two waypoints are identical (ignore color if one is BlueMap)
      */
     private fun isIdentical(jm: SyncableWaypoint, bm: SyncableWaypoint): Boolean {
+        // We ignore color because BlueMap markers currently don't store it in our integration
         return jm.name.equals(bm.name, ignoreCase = true) &&
-                jm.color == bm.color &&
                 jm.enabled == bm.enabled
     }
 

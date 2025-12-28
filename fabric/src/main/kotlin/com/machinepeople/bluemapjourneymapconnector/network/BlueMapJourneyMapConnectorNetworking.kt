@@ -122,15 +122,19 @@ object BlueMapJourneyMapConnectorNetworking {
     }
 
     /**
-     * Register server-side packet handlers
+     * Register common payload types for both client and server
      */
-    fun registerServerPackets() {
-        // Register payload types
+    fun registerPayloadTypes() {
         PayloadTypeRegistry.playC2S().register(RequestBlueMapWaypointsPayload.TYPE, RequestBlueMapWaypointsPayload.CODEC)
         PayloadTypeRegistry.playC2S().register(SyncToBlueMapPayload.TYPE, SyncToBlueMapPayload.CODEC)
         PayloadTypeRegistry.playS2C().register(BlueMapWaypointsResponsePayload.TYPE, BlueMapWaypointsResponsePayload.CODEC)
         PayloadTypeRegistry.playS2C().register(SyncToJourneyMapPayload.TYPE, SyncToJourneyMapPayload.CODEC)
+    }
 
+    /**
+     * Register server-side packet handlers
+     */
+    fun registerServerPackets() {
         // Handle request for BlueMap waypoints
         ServerPlayNetworking.registerGlobalReceiver(RequestBlueMapWaypointsPayload.TYPE) { payload, context ->
             val player = context.player()
@@ -155,17 +159,21 @@ object BlueMapJourneyMapConnectorNetworking {
         // Handle sync operations to BlueMap
         ServerPlayNetworking.registerGlobalReceiver(SyncToBlueMapPayload.TYPE) { payload, context ->
             val player = context.player()
-            BlueMapJourneyMapConnectorMod.LOGGER.info("Received sync to BlueMap request from ${player.name.string}")
+            BlueMapJourneyMapConnectorMod.LOGGER.info("Received sync to BlueMap request from ${player.name.string} with ${payload.operations.size} operations")
 
             val blueMapIntegration = BlueMapJourneyMapConnectorMod.getBlueMapIntegration()
             if (blueMapIntegration == null || !blueMapIntegration.isAvailable()) {
-                BlueMapJourneyMapConnectorMod.LOGGER.warn("BlueMap integration not available")
+                BlueMapJourneyMapConnectorMod.LOGGER.warn("Sync failed: BlueMap integration not available")
                 return@registerGlobalReceiver
             }
 
             for (operation in payload.operations) {
+                BlueMapJourneyMapConnectorMod.LOGGER.info("Processing operation: ${operation.action} for waypoint '${operation.waypoint.name}'")
                 when (operation.action) {
-                    SyncAction.CREATE -> blueMapIntegration.addWaypoint(operation.waypoint)
+                    SyncAction.CREATE -> {
+                        val added = blueMapIntegration.addWaypoint(operation.waypoint)
+                        BlueMapJourneyMapConnectorMod.LOGGER.info("Add result: $added")
+                    }
                     SyncAction.DELETE -> blueMapIntegration.removeWaypoint(operation.waypoint)
                     SyncAction.UPDATE -> {
                         blueMapIntegration.removeWaypoint(operation.waypoint)
@@ -215,6 +223,7 @@ object BlueMapJourneyMapConnectorNetworking {
      */
     @Environment(EnvType.CLIENT)
     fun requestBlueMapWaypoints(dimension: String? = null) {
+        BlueMapJourneyMapConnectorMod.LOGGER.info("Sending request for BlueMap waypoints (dim: $dimension)")
         ClientPlayNetworking.send(RequestBlueMapWaypointsPayload(dimension))
     }
 

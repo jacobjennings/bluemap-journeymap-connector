@@ -22,8 +22,16 @@ import net.minecraft.world.level.Level
 @JourneyMapPlugin(apiVersion = "2.0.0")
 class JourneyMapIntegration : IClientPlugin {
 
+    init {
+        println("BlueMapConnector: JourneyMapIntegration class instantiated!")
+    }
+
     companion object {
         private var instance: JourneyMapIntegration? = null
+
+        init {
+            println("BlueMapConnector: JourneyMapIntegration companion object initialized!")
+        }
 
         /**
          * Get the singleton instance of this integration
@@ -39,6 +47,7 @@ class JourneyMapIntegration : IClientPlugin {
     private var api: IClientAPI? = null
 
     override fun initialize(jmClientApi: IClientAPI) {
+        println("BlueMapConnector: JourneyMap API initialize() called!")
         BlueMapJourneyMapConnectorMod.LOGGER.info("JourneyMap API initialized for BlueMap JourneyMap Connector!")
         this.api = jmClientApi
         instance = this
@@ -51,12 +60,14 @@ class JourneyMapIntegration : IClientPlugin {
      */
     fun getAllWaypoints(): List<SyncableWaypoint> {
         val jmApi = api ?: run {
-            BlueMapJourneyMapConnectorMod.LOGGER.warn("JourneyMap API not available")
+            BlueMapJourneyMapConnectorMod.LOGGER.warn("JourneyMap API not available - plugin not initialized")
             return emptyList()
         }
 
         return try {
-            jmApi.allWaypoints.map { it.toSyncable() }
+            val waypoints = jmApi.allWaypoints
+            BlueMapJourneyMapConnectorMod.LOGGER.info("Fetched ${waypoints.size} waypoints from JourneyMap")
+            waypoints.map { it.toSyncable() }
         } catch (e: Exception) {
             BlueMapJourneyMapConnectorMod.LOGGER.error("Failed to get waypoints from JourneyMap", e)
             emptyList()
@@ -77,16 +88,14 @@ class JourneyMapIntegration : IClientPlugin {
         }
     }
 
-    /**
-     * Add a waypoint to JourneyMap from a SyncableWaypoint
-     */
     fun addWaypoint(syncable: SyncableWaypoint): Boolean {
         val jmApi = api ?: run {
-            BlueMapJourneyMapConnectorMod.LOGGER.warn("JourneyMap API not available")
+            BlueMapJourneyMapConnectorMod.LOGGER.warn("JourneyMap API not available - cannot add waypoint")
             return false
         }
 
         return try {
+            BlueMapJourneyMapConnectorMod.LOGGER.info("Creating JourneyMap waypoint: ${syncable.name} in ${syncable.dimension}")
             val waypoint = WaypointFactory.createClientWaypoint(
                 BlueMapJourneyMapConnectorMod.MOD_ID,
                 BlockPos(syncable.x, syncable.y, syncable.z),
@@ -98,17 +107,8 @@ class JourneyMapIntegration : IClientPlugin {
             waypoint.color = syncable.color
             waypoint.isEnabled = syncable.enabled
 
-            // Set icon if provided
-            syncable.icon?.let { iconPath ->
-                try {
-                    waypoint.setIconResourceLoctaion(Identifier.tryParse(iconPath)!!)
-                } catch (e: Exception) {
-                    BlueMapJourneyMapConnectorMod.LOGGER.debug("Could not set icon for waypoint: $iconPath")
-                }
-            }
-
             jmApi.addWaypoint(BlueMapJourneyMapConnectorMod.MOD_ID, waypoint)
-            BlueMapJourneyMapConnectorMod.LOGGER.info("Added waypoint '${syncable.name}' to JourneyMap")
+            BlueMapJourneyMapConnectorMod.LOGGER.info("Successfully added waypoint '${syncable.name}' to JourneyMap")
             true
         } catch (e: Exception) {
             BlueMapJourneyMapConnectorMod.LOGGER.error("Failed to add waypoint to JourneyMap", e)

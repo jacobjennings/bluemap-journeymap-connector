@@ -20,6 +20,9 @@
         "adapter": "kotlin",
         "value": "com.machinepeople.bluemapjourneymapconnector.client.BlueMapJourneyMapConnectorClient"
       }
+    ],
+    "journeymap": [
+      "com.machinepeople.bluemapjourneymapconnector.journeymap.JourneyMapIntegration"
     ]
   },
   "mixins": [],
@@ -34,6 +37,11 @@
     "bluemap": "*"
   },
   "custom": {
+    "journeymap": {
+      "plugins": [
+        "com.machinepeople.bluemapjourneymapconnector.journeymap.JourneyMapIntegration"
+      ]
+    },
     "modmenu": {
       "links": {
         "modmenu.discord": "https://discord.gg/your-discord"
