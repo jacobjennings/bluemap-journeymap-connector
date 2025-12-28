@@ -69,7 +69,14 @@ tasks.processResources {
     }
 }
 
+tasks.remapJar {
+    val modId: String by project
+    archiveBaseName.set(modId)
+}
+
 tasks.jar {
+    val modId: String by project
+    archiveBaseName.set(modId)
     from("LICENSE") {
         rename { "${it}_${project.name}" }
     }
