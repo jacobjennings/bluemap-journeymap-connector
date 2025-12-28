@@ -1,5 +1,8 @@
 # BlueMap JourneyMap Connector
 
+> [!WARNING]
+> This is a **vibecoded** mod with limited testing. It was created quickly with the help of AI and may contain bugs or edge cases that haven't been thoroughly explored. Use with caution.
+
 A Fabric mod that synchronizes waypoints between [JourneyMap](https://www.curseforge.com/minecraft/mc-mods/journeymap) and [BlueMap](https://bluemap.bluecolored.de/).
 
 ## Features
