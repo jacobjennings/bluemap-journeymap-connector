@@ -5,6 +5,8 @@
 
 A Fabric mod that synchronizes waypoints between [JourneyMap](https://www.curseforge.com/minecraft/mc-mods/journeymap) and [BlueMap](https://bluemap.bluecolored.de/).
 
+![Screenshot](docs/images/screenshot.png)
+
 ## Features
 
 - **Diff View**: See which waypoints exist only in JourneyMap, only in BlueMap, or both
