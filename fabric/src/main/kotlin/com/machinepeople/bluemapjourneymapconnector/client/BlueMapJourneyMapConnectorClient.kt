@@ -8,7 +8,7 @@ import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper
 import net.minecraft.client.KeyMapping
 import net.minecraft.client.Minecraft
 import org.lwjgl.glfw.GLFW
@@ -36,8 +36,8 @@ object BlueMapJourneyMapConnectorClient : ClientModInitializer {
     override fun onInitializeClient() {
         BlueMapJourneyMapConnectorMod.LOGGER.info("Initializing BlueMap JourneyMap Connector client...")
 
-        // Register keybindings
-        KeyBindingHelper.registerKeyBinding(OPEN_SYNC_GUI_KEY)
+        // Register keybindings (26.1 renamed the Fabric keybinding API to keymapping)
+        KeyMappingHelper.registerKeyMapping(OPEN_SYNC_GUI_KEY)
 
         // Register client network packet handlers
         BlueMapJourneyMapConnectorNetworking.registerClientPackets()

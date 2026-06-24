@@ -1,7 +1,7 @@
 plugins {
     kotlin("jvm")
     kotlin("plugin.serialization")
-    id("fabric-loom")
+    id("net.fabricmc.fabric-loom")
 }
 
 val minecraftVersion: String by project
@@ -13,29 +13,25 @@ val journeyMapApiVersion: String by project
 
 dependencies {
     // Core module
-    implementation(project(":core", configuration = "namedElements"))
+    implementation(project(":core"))
     include(project(":core"))
 
     // Minecraft & Fabric
+    // 26.1+ is unobfuscated: no mappings() declaration, and mod dependencies use the
+    // standard implementation/compileOnly configurations (no remapping = no modX configs).
     minecraft("com.mojang:minecraft:$minecraftVersion")
-    // mappings(loom.officialMojangMappings())
-    mappings(loom.officialMojangMappings())
-    modImplementation("net.fabricmc:fabric-loader:$fabricLoaderVersion")
-    modImplementation("net.fabricmc.fabric-api:fabric-api:$fabricApiVersion")
+    implementation("net.fabricmc:fabric-loader:$fabricLoaderVersion")
+    implementation("net.fabricmc.fabric-api:fabric-api:$fabricApiVersion")
 
     // Kotlin language adapter
-    modImplementation("net.fabricmc:fabric-language-kotlin:$fabricKotlinVersion")
+    implementation("net.fabricmc:fabric-language-kotlin:$fabricKotlinVersion")
 
     // BlueMap API (server-side marker management)
     implementation("de.bluecolored:bluemap-api:$blueMapApiVersion")
 
     // JourneyMap API (client-side waypoint access)
     // Published to: https://jm.gserv.me/repository/maven-snapshots/
-    modCompileOnly("info.journeymap:journeymap-api-fabric:$journeyMapApiVersion")
-}
-
-loom {
-    accessWidenerPath.set(file("src/main/resources/bluemap-journeymap-connector.accesswidener"))
+    compileOnly("info.journeymap:journeymap-api-fabric:$journeyMapApiVersion")
 }
 
 tasks.processResources {
@@ -69,11 +65,7 @@ tasks.processResources {
     }
 }
 
-tasks.remapJar {
-    val modId: String by project
-    archiveBaseName.set(modId)
-}
-
+// 26.1+ is unobfuscated: there is no remapJar task. The plain jar is the final artifact.
 tasks.jar {
     val modId: String by project
     archiveBaseName.set(modId)

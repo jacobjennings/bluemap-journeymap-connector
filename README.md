@@ -38,10 +38,11 @@ A Fabric mod that synchronizes waypoints between [JourneyMap](https://www.cursef
 
 ## Requirements
 
-- Minecraft 1.21.4+
-- Fabric Loader 0.16.0+
+- Minecraft 26.1.2+ (the first unobfuscated Java Edition release)
+- Java 25+
+- Fabric Loader 0.19.0+
 - Fabric API
-- Fabric Language Kotlin
+- Fabric Language Kotlin 1.13.11+
 - JourneyMap (client-side, for waypoint access)
 - BlueMap (server-side, for marker management)
 

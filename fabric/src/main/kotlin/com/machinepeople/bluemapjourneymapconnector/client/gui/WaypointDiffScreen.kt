@@ -6,7 +6,7 @@ import com.machinepeople.bluemapjourneymapconnector.network.WaypointDataCache
 import com.machinepeople.bluemapjourneymapconnector.network.BlueMapJourneyMapConnectorNetworking
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.Component
@@ -106,12 +106,14 @@ class WaypointDiffScreen : Screen(Component.translatable("gui.bluemap-journeymap
         refreshData()
     }
 
-    override fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, partialTick: Float) {
+    // 26.1 replaced immediate-mode Screen.render(GuiGraphics, ...) with the deferred
+    // extractRenderState(GuiGraphicsExtractor, ...) pipeline (Renderable interface).
+    override fun extractRenderState(guiGraphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTick: Float) {
         // Render background and widgets (buttons)
-        super.render(guiGraphics, mouseX, mouseY, partialTick)
+        super.extractRenderState(guiGraphics, mouseX, mouseY, partialTick)
 
         // Render title
-        guiGraphics.drawCenteredString(
+        guiGraphics.centeredText(
             font,
             title,
             width / 2,
@@ -120,7 +122,7 @@ class WaypointDiffScreen : Screen(Component.translatable("gui.bluemap-journeymap
         )
 
         if (isLoading) {
-            guiGraphics.drawCenteredString(
+            guiGraphics.centeredText(
                 font,
                 "Loading waypoints...",
                 width / 2,
@@ -162,12 +164,12 @@ class WaypointDiffScreen : Screen(Component.translatable("gui.bluemap-journeymap
                     append(" | Conflicts: ${diff.conflicts.size}")
                 }
             }
-            guiGraphics.drawCenteredString(font, stats, width / 2, statsY, TEXT_COLOR)
+            guiGraphics.centeredText(font, stats, width / 2, statsY, TEXT_COLOR)
         }
     }
 
     private fun renderPanel(
-        guiGraphics: GuiGraphics,
+        guiGraphics: GuiGraphicsExtractor,
         x: Int,
         y: Int,
         title: String,
@@ -181,7 +183,7 @@ class WaypointDiffScreen : Screen(Component.translatable("gui.bluemap-journeymap
 
         // Panel header
         guiGraphics.fill(x, y, x + PANEL_WIDTH, y + 20, HEADER_COLOR)
-        guiGraphics.drawCenteredString(font, title, x + PANEL_WIDTH / 2, y + 6, TEXT_COLOR)
+        guiGraphics.centeredText(font, title, x + PANEL_WIDTH / 2, y + 6, TEXT_COLOR)
 
         // Panel content
         val contentY = y + 22
@@ -205,11 +207,11 @@ class WaypointDiffScreen : Screen(Component.translatable("gui.bluemap-journeymap
 
             // Waypoint name (start after color)
             val displayName = if (waypoint.name.length > 30) waypoint.name.take(27) + "..." else waypoint.name
-            guiGraphics.drawString(font, displayName, x + 12, entryY + 4, TEXT_COLOR, false)
+            guiGraphics.text(font, displayName, x + 12, entryY + 4, TEXT_COLOR, false)
 
             // Coordinates (smaller text)
             val coords = "(${waypoint.x}, ${waypoint.y}, ${waypoint.z})"
-            guiGraphics.drawString(font, coords, x + 12, entryY + 15, SECONDARY_TEXT_COLOR, false)
+            guiGraphics.text(font, coords, x + 12, entryY + 15, SECONDARY_TEXT_COLOR, false)
 
             // Sync button (far right)
             val buttonX = x + PANEL_WIDTH - BUTTON_WIDTH - 6
@@ -219,15 +221,15 @@ class WaypointDiffScreen : Screen(Component.translatable("gui.bluemap-journeymap
 
             val buttonColor = if (buttonHovered) 0xFF66AAFF.toInt() else 0xFF4488FF.toInt()
             guiGraphics.fill(buttonX, entryY + 4, buttonX + BUTTON_WIDTH, entryY + BUTTON_HEIGHT + 4, buttonColor)
-            guiGraphics.drawCenteredString(font, buttonLabel, buttonX + BUTTON_WIDTH / 2, entryY + 7, TEXT_COLOR)
+            guiGraphics.centeredText(font, buttonLabel, buttonX + BUTTON_WIDTH / 2, entryY + 7, TEXT_COLOR)
         }
 
         // Scroll indicators
         if (scrollOffset > 0) {
-            guiGraphics.drawCenteredString(font, "▲", x + PANEL_WIDTH / 2, y + 22, TEXT_COLOR)
+            guiGraphics.centeredText(font, "▲", x + PANEL_WIDTH / 2, y + 22, TEXT_COLOR)
         }
         if (waypoints.size > scrollOffset + visibleEntries) {
-            guiGraphics.drawCenteredString(font, "▼", x + PANEL_WIDTH / 2, y + PANEL_HEIGHT - 12, TEXT_COLOR)
+            guiGraphics.centeredText(font, "▼", x + PANEL_WIDTH / 2, y + PANEL_HEIGHT - 12, TEXT_COLOR)
         }
     }
 

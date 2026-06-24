@@ -1,16 +1,16 @@
 plugins {
     kotlin("jvm")
     kotlin("plugin.serialization")
-    id("fabric-loom")
+    id("net.fabricmc.fabric-loom")
 }
 
 val minecraftVersion: String by project
 val blueMapApiVersion: String by project
 
 dependencies {
-    // Minecraft (needed for BlockPos, ResourceLocation, etc.)
+    // Minecraft (needed for BlockPos, Identifier, etc.)
+    // 26.1+ is unobfuscated: no mappings() declaration is required.
     minecraft("com.mojang:minecraft:$minecraftVersion")
-    mappings(loom.officialMojangMappings())
 
     // BlueMap API
     implementation("de.bluecolored:bluemap-api:$blueMapApiVersion")

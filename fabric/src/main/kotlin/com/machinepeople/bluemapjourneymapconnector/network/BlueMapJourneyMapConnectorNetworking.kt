@@ -125,10 +125,11 @@ object BlueMapJourneyMapConnectorNetworking {
      * Register common payload types for both client and server
      */
     fun registerPayloadTypes() {
-        PayloadTypeRegistry.playC2S().register(RequestBlueMapWaypointsPayload.TYPE, RequestBlueMapWaypointsPayload.CODEC)
-        PayloadTypeRegistry.playC2S().register(SyncToBlueMapPayload.TYPE, SyncToBlueMapPayload.CODEC)
-        PayloadTypeRegistry.playS2C().register(BlueMapWaypointsResponsePayload.TYPE, BlueMapWaypointsResponsePayload.CODEC)
-        PayloadTypeRegistry.playS2C().register(SyncToJourneyMapPayload.TYPE, SyncToJourneyMapPayload.CODEC)
+        // 26.1 Fabric networking renamed playC2S()/playS2C() to serverboundPlay()/clientboundPlay().
+        PayloadTypeRegistry.serverboundPlay().register(RequestBlueMapWaypointsPayload.TYPE, RequestBlueMapWaypointsPayload.CODEC)
+        PayloadTypeRegistry.serverboundPlay().register(SyncToBlueMapPayload.TYPE, SyncToBlueMapPayload.CODEC)
+        PayloadTypeRegistry.clientboundPlay().register(BlueMapWaypointsResponsePayload.TYPE, BlueMapWaypointsResponsePayload.CODEC)
+        PayloadTypeRegistry.clientboundPlay().register(SyncToJourneyMapPayload.TYPE, SyncToJourneyMapPayload.CODEC)
     }
 
     /**
