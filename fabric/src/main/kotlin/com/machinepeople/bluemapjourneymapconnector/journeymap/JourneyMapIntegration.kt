@@ -5,7 +5,7 @@ import com.machinepeople.bluemapjourneymapconnector.data.SyncableWaypoint
 import com.machinepeople.bluemapjourneymapconnector.data.WaypointSource
 import journeymap.api.v2.client.IClientAPI
 import journeymap.api.v2.client.IClientPlugin
-import journeymap.api.v2.client.JourneyMapPlugin
+import journeymap.api.v2.common.JourneyMapPlugin
 import journeymap.api.v2.common.waypoint.Waypoint
 import journeymap.api.v2.common.waypoint.WaypointFactory
 import net.minecraft.core.BlockPos
@@ -96,7 +96,7 @@ class JourneyMapIntegration : IClientPlugin {
 
         return try {
             BlueMapJourneyMapConnectorMod.LOGGER.info("Creating JourneyMap waypoint: ${syncable.name} in ${syncable.dimension}")
-            val waypoint = WaypointFactory.createClientWaypoint(
+            val waypoint = WaypointFactory.createWaypoint(
                 BlueMapJourneyMapConnectorMod.MOD_ID,
                 BlockPos(syncable.x, syncable.y, syncable.z),
                 syncable.name,
