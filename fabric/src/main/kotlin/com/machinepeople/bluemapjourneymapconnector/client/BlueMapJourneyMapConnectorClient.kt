@@ -11,7 +11,6 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper
 import net.minecraft.client.KeyMapping
 import net.minecraft.client.Minecraft
-import org.lwjgl.glfw.GLFW
 
 import net.minecraft.resources.Identifier
 
@@ -28,8 +27,8 @@ object BlueMapJourneyMapConnectorClient : ClientModInitializer {
 
     private val OPEN_SYNC_GUI_KEY: KeyMapping = KeyMapping(
         "key.bluemap-journeymap-connector.open_gui",
-        InputConstants.Type.KEYSYM,
-        GLFW.GLFW_KEY_J,
+        InputConstants.Type.KEYBOARD,
+        InputConstants.KEY_J,
         KeyMapping.Category(Identifier.tryParse("category.bluemap-journeymap-connector")!!)
     )
 
@@ -62,7 +61,7 @@ object BlueMapJourneyMapConnectorClient : ClientModInitializer {
         BlueMapJourneyMapConnectorNetworking.requestBlueMapWaypoints()
 
         // Open the diff screen
-        client.setScreen(WaypointDiffScreen())
+        client.setScreenAndShow(WaypointDiffScreen())
     }
 }
 
