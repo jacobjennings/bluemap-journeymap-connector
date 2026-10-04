@@ -40,6 +40,12 @@ Server and client. Players need the matching jar, so a protocol change needs bot
   - **Never run anything on an NVIDIA GPU.** The RTX 5090 (jjpc) and RTX 3090
     (bb) serve inference only. Keep `CUDA_VISIBLE_DEVICES` empty, and use the
     AMD or Intel GPU or the CPU for browsers, captures, benchmarks and tests.
+- **Never run a destructive command for real, not even in a test.** Every
+  command hits the owner's real machine. No `kill -1`, `kill 0`, `pkill` or
+  `killall` by name, `tmux kill-server`, `systemctl stop` or force-push to a
+  real remote, even when a guard is supposed to catch it. Test a guard through
+  its decision function, or with stub binaries first on `PATH`. A test like
+  this killed every process the owner had on 3 October 2026.
 - **Keep large files out of the repository.** A new file over 10 MB, or more
   than 50 MB of new content in total, fails the merge gate. Never commit built
   jars, `build/`, `dist/`, `node_modules/` or a Gradle cache.
