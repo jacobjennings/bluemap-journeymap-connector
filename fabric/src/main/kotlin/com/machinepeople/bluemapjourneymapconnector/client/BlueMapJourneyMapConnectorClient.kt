@@ -61,7 +61,7 @@ object BlueMapJourneyMapConnectorClient : ClientModInitializer {
         BlueMapJourneyMapConnectorNetworking.requestBlueMapWaypoints()
 
         // Open the diff screen
-        client.setScreenAndShow(WaypointDiffScreen())
+        client.gui.setScreen(WaypointDiffScreen())
     }
 }
 

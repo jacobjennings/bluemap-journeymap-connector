@@ -54,8 +54,11 @@ small changes in `JourneyMapIntegration.kt`. JourneyMap itself ships a
 - `InputConstants.Type.KEYSYM` no longer exists. The enum is now
   `KEYBOARD` and `MOUSE`. Confirmed with `javap` on the loom-produced
   `minecraft-merged-deobf-26.3.jar`.
-- `Minecraft#setScreen` no longer exists in 26.3. The only setter is
-  `setScreenAndShow`. The diff screen call switched to it.
+- The `Minecraft#setScreen` setter moved to `client.gui.setScreen` in 26.3.
+  The diff screen call uses it. `setScreenAndShow` is a different method that
+  also forces a render frame, so it was not a behavior-preserving substitute.
+  (Corrected by MCS-10 follow-up. This bullet previously described the
+  migration inaccurately while the code used `setScreenAndShow`.)
 - The `@JourneyMapPlugin` annotation moved from `journeymap.api.v2.client` to
   `journeymap.api.v2.common` in the 26.2 API jar.
 - `WaypointFactory.createClientWaypoint` is gone. It is replaced by
