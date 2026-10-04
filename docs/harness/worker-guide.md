@@ -1,0 +1,90 @@
+# bluemap-journeymap-connector worker guide
+
+You are a worker on one task for `bluemap-journeymap-connector`, tracked on the Huly board project
+MCS with the other Minecraft repositories. This guide replaces any `AGENTS.md`
+for you. Your brief is your task. This guide is the rules around it. The
+owner's personal guide is also loaded, and it applies in full.
+
+## What bluemap-journeymap-connector is
+
+A Fabric mod by Jake, written in Kotlin, that connects BlueMap markers to JourneyMap waypoints. Modules: `core` and `fabric`. It uses Minecraft networking classes and a JourneyMap API that is `compileOnly`. Versions are in `gradle.properties`.
+
+Server and client. Players need the matching jar, so a protocol change needs both sides updated together.
+
+## Your working rules
+
+- **Stay inside your worktree.** Read and change only what your brief names,
+  plus what you must read to do it.
+- **Commit early and push often.** Make a real commit within your first ten
+  minutes, then commit and push after each meaningful step.
+- **Every git command carries `-C <worktree>`.** Your shell's working
+  directory does not persist between commands.
+- **Commit as the configured identity.** Never add AI attribution or
+  co-author trailers, and never name a vendor or model in a commit message.
+  Never force-push or rewrite pushed history.
+- **Work stays on your branch.** Do not merge into `main` and do not push to it.
+  Merged means it is in `origin/main`, and the merge lane does that.
+- **Run only the checks near your change.** The full build gate belongs to the
+  merge lane, except where your brief names it.
+- **Never launch a graphical application.**
+- **Keep large files out of the repository.** A new file over 10 MB, or more
+  than 50 MB of new content in total, fails the merge gate. Never commit built
+  jars, `build/`, `dist/`, `node_modules/` or a Gradle cache.
+- **Finish with a report when your brief asks for one**, committed and pushed
+  under `docs/harness/reports/`, and name its path in your last message. End it
+  with a RECOMMENDATIONS section for anything outside your scope.
+- **Your run is not done until your checks pass and your commit is pushed.**
+- **Name a card by its full link**, such as `http://huly.lan/workbench/hulyaccessevaluation/tracker/MCS-12`.
+- **You cannot edit `AGENTS.md` or `CLAUDE.md`.** If your task needs a guide
+  change, say so in your report.
+
+## Targeted checks
+
+Run these from your worktree.
+
+Gradle needs a writable home. If `~/.gradle` is not writable in your sandbox,
+run `export GRADLE_USER_HOME="$TMPDIR/gradle-home"` first. Never commit a Gradle cache or
+a `build/` folder.
+
+- **Compile:** `./gradlew classes` (fast, after any code or version change).
+- **Build the jar:** `./gradlew build`. The jar lands under `build/libs/` or
+  `<module>/build/libs/`. Name its path and file name in your report.
+- **Version changes** live in `gradle.properties`. Check each new version exists on its
+  maven or on Modrinth before you use it, and report where you checked.
+
+## Keep your context small
+
+- **Read ranges, not files.** Find what you need with `rg -n`, then read the
+  lines around it with `sed -n '120,180p' <file>`.
+- **Pipe long build output through `tail -40`.**
+- **Commit and push after the first working edit and after every build.** A run
+  that hits its time limit keeps only what is committed.
+- **Stop at your brief's one change.** If the task needs more, say so in your
+  final message and name the next step.
+
+## Side jobs on the local cluster
+
+- `local-subagent.sh '<question>'` runs a small isolated job. `--deep` uses the
+  full model. `--vision <image>` asks about an image.
+- Exit 75 means that machine is full. Exit 65 means it is down. Do not retry in
+  a loop. Carry on without it and say so in your report.
+
+## Rules that must never break
+
+- **Fabric refuses mismatched mods at startup.** `fabric.mod.json` `depends.minecraft`
+  must match the server's Minecraft version. A bare `"26.1"` does not match `26.1.1`, and
+  one unmet hard dependency stops the whole server. Prefer a `~` or `>=` predicate that
+  covers the target version, and say which you chose.
+- **This jar runs on the live server `stlmc`.** It is installed by the
+  mc-server-spinner-upper Ansible role from a local jar list. You build the jar. You never
+  install it anywhere.
+- **Never contact a real server.** Do not reach `stlmc.lan` or any other lab host. Never
+  start a Minecraft server or client unless your brief says so.
+- **Never write a secret** or commit a token.
+
+## Writing
+
+Plain short sentences, one idea each. In anything the owner reads: no
+semicolons, no em dashes, never the words "honest" or "durable", and times in
+America/Chicago written like `9:53 pm`. Run the harness prose checker
+`board/board_text.py <file>` from the pinned harness on any report.
