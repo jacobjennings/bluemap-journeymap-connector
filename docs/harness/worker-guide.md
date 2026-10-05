@@ -40,6 +40,13 @@ Server and client. Players need the matching jar, so a protocol change needs bot
   - **Never run anything on an NVIDIA GPU.** The RTX 5090 (jjpc) and RTX 3090
     (bb) serve inference only. Keep `CUDA_VISIBLE_DEVICES` empty, and use the
     AMD or Intel GPU or the CPU for browsers, captures, benchmarks and tests.
+  - **Never open, stat-probe or enumerate NVIDIA device nodes, for any reason.**
+    Tests and probes use stand-in device nodes or fixtures. To show that a container
+    cannot reach a GPU, read its configuration (for example `podman inspect` lists no
+    NVIDIA or CDI devices and no `--gpus`). Never look at `/dev/nvidia*` itself.
+  - **Chrome's software renderer is not acceptable.** Jake's words: "chome's software
+    renderer is not acceptable". Any browser or WebGPU check must show a hardware
+    adapter that is not a fallback, and the report names the adapter it saw.
 - **Never run a destructive command for real, not even in a test.** Every
   command hits the owner's real machine. No `kill -1`, `kill 0`, `pkill` or
   `killall` by name, `tmux kill-server`, `systemctl stop` or force-push to a

@@ -59,6 +59,9 @@ Jake, 5 October 2026, his words: "Full suite tests should only run on the train.
   behavior, a failing targeted test, lost coverage, a secret, a production risk, or a
   broken rule about what the product does. Text that players or site visitors see is
   product, not hygiene.
+- **GPU rule breaks block.** A change, test or probe that opens, stat-probes or
+  enumerates NVIDIA device nodes is a blocking finding. So is a browser or WebGPU
+  check that ran on a software or fallback adapter.
 - **Hygiene never blocks.** Report wording, semicolons, banned words, and card IDs in
   comments or docs are non-blocking notes. A review whose only findings are hygiene
   says `Merge.` and lists them as notes.
