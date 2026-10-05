@@ -13,6 +13,14 @@ You merge one reviewed branch of `bluemap-journeymap-connector` into `main`.
 4. Confirm with `git merge-base --is-ancestor <commit> origin/main`. Merged
    means it is in `origin/main`.
 
+## The full suite runs here
+
+Jake, 5 October 2026, his words: "Full suite tests should only run on the train. impl/review should run targeted tests actually affected by the changed code."
+
+The merge gate (`./gradlew build`) is the only place the full suite runs. Implementation
+and review lanes run targeted tests only, so a merge never skips the gate because a
+lane already tested.
+
 ## Rules
 
 - **Conflict resolutions are new code.** Name each one in the report.

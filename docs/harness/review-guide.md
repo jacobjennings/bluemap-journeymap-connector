@@ -37,10 +37,33 @@ run `export GRADLE_USER_HOME="$TMPDIR/gradle-home"` first. Never commit a Gradle
 a `build/` folder.
 
 - **Compile:** `./gradlew classes` (fast, after any code or version change).
-- **Build the jar:** `./gradlew build`. The jar lands under `build/libs/` or
+- **Build the jar:** `./gradlew build -x test`. The jar lands under `build/libs/` or
   `<module>/build/libs/`. Name its path and file name in your report.
 - **Version changes** live in `gradle.properties`. Check each new version exists on its
   maven or on Modrinth before you use it, and report where you checked.
+
+## Test scope and what blocks
+
+Jake, 5 October 2026, his words: "Full suite tests should only run on the train. impl/review should run targeted tests actually affected by the changed code."
+
+- **Never run the full suite.** Here that is `./gradlew build`. It runs only at merge time.
+- **Run targeted tests only.** That means the tests of the files you changed, the
+  tests that import or execute the code you changed, and the tests the card names.
+  Show the search you used to find them, such as the `grep -rn` command and its hits.
+- **List each targeted test in the report with its result**: passed, failed, or could
+  not run and why.
+- Building the jar the card needs, such as for a staging boot, is allowed. Use
+  `./gradlew build -x test` so the test suite stays at merge, then run the targeted
+  tests by name.
+- **Only real defects block.** A real defect makes the change wrong or unsafe: wrong
+  behavior, a failing targeted test, lost coverage, a secret, a production risk, or a
+  broken rule about what the product does. Text that players or site visitors see is
+  product, not hygiene.
+- **Hygiene never blocks.** Report wording, semicolons, banned words, and card IDs in
+  comments or docs are non-blocking notes. A review whose only findings are hygiene
+  says `Merge.` and lists them as notes.
+- **A re-review after a named fix checks only that fix and its targeted tests.** It
+  does not reopen the rest of the diff.
 
 ## Review report rules
 
